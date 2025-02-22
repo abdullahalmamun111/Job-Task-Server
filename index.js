@@ -23,6 +23,32 @@ const client = new MongoClient(uri, {
   }
 });
 
+const TaskCollection = client.db("Job-Task").collection("alltasks");
+
+
+app.post('/tasks', async(req,res) => {
+  const data = req.body;
+  const result = await TaskCollection.insertOne(data);
+  res.send(result);
+})
+
+// get related apis
+app.get('/tasks',async(req,res) => {
+  const result = await TaskCollection.find().toArray();
+  res.send(result);
+})
+
+
+
+
+
+
+
+
+
+
+
+
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
@@ -45,3 +71,4 @@ app.get('/', (req,res) => {
 app.listen(port,() => {
 	console.log('server running..')
 })
+
