@@ -11,7 +11,7 @@ app.use(express.json());
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.fr9le.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -37,6 +37,27 @@ app.get('/tasks',async(req,res) => {
   const result = await TaskCollection.find().toArray();
   res.send(result);
 })
+
+
+// update related apis
+app.patch('/task/update/:id', async(req,res) => {
+  const id = req.params.id ;
+  const data = req.body ;
+  const filter = {_id: new ObjectId(id)}
+	const updatedDoc = {
+	  $set: {
+      title:data.title,
+      description:data.description,
+      category:data.category
+	  }
+	}
+	const result = await TaskCollection.updateOne(filter,updatedDoc)
+	res.send(result)
+})
+
+
+// delete related api
+
 
 
 
